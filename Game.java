@@ -19,162 +19,8 @@ public class Game {
     public static int[][]  nav;                     // An uninitialized array of type int int.
     public static int moves = 0;                    // Counter of the player's moves.
     public static int score = 0;                    // Tracker of the player's score.
+    public static int money = 0;                    // Keeps track of player's money.
 
-
-    public static class ListTester {
-
-        public static void main(String[] args) {
-            System.out.println("List tester.");
-
-            // Make the list manager.
-            ListMan lm1 = new ListMan();
-            lm1.setName("Magic Items");
-            lm1.setDesc("These are some of my favorite things.");
-
-            final String fileName = "magicitems.txt";
-
-            readMagicItemsFromFileToList(fileName, lm1);
-            // Display the list of items.
-            // System.out.println(lm1.toString());
-
-            // Declare an array for the items.
-            ListItem[] items = new ListItem[lm1.getLength()];
-            readMagicItemsFromFileToArray(fileName, items);
-            // Display the array of items.
-            System.out.println("Items in the array BEFORE sorting:");
-            for (int i = 0; i < items.length; i++) {
-                if (items[i] != null) {
-                    System.out.println(items[i].toString());
-                }
-            }
-
-            selectionSort(items);
-
-            System.out.println("Items in the array AFTER sorting:");
-            for (int i = 0; i < items.length; i++) {
-                if (items[i] != null) {
-                    System.out.println(items[i].toString());
-                }
-            }
-
-            // Ask player for an item.
-            Scanner inputReader = new Scanner(System.in);
-            System.out.print("What item would you like? ");
-            String targetItem = new String();
-            targetItem = inputReader.nextLine();
-            System.out.println();
-
-            ListItem li = new ListItem();
-            li = sequentialSearch(lm1, targetItem);
-            if (li != null) {
-                System.out.println(li.toString());
-            }
-        }
-
-        //
-        // Private
-        //
-        private static  ListItem sequentialSearch(ListMan lm,
-                                                 String target) {
-            ListItem retVal = null;
-            System.out.println("Searching for " + target + ".");
-            int counter = 0;
-            ListItem currentItem = new ListItem();
-            currentItem = lm.getHead();
-            boolean isFound = false;
-            while ( (!isFound) && (currentItem != null) ) {
-                counter = counter +1;
-                if (currentItem.getName().equalsIgnoreCase(target)) {
-                    // We found it!
-                    isFound = true;
-                    retVal = currentItem;
-                } else {
-                    // Keep looking.
-                    currentItem = currentItem.getNext();
-                }
-            }
-            if (isFound) {
-                System.out.println("Found " + target + " after " + counter + " comparisons.");
-                return  currentItem;
-            } else {
-                System.out.println("Could not find " + target + " in " + counter + " comparisons.");
-            }
-
-            return retVal;
-        }
-
-
-        private static  void readMagicItemsFromFileToList(String fileName,
-                                                         ListMan lm) {
-            File myFile = new File(fileName);
-            try {
-                Scanner input = new Scanner(myFile);
-                while (input.hasNext()) {
-                    // Read a line from the file.
-                    String itemName = input.nextLine();
-
-                    // Construct a new list item and set its attributes.
-                    ListItem fileItem = new ListItem();
-                    fileItem.setName(itemName);
-                    fileItem.setCost(Math.random() * 100);
-                    fileItem.setNext(null); // Still redundant. Still safe.
-
-                    // Add the newly constructed item to the list.
-                    lm.add(fileItem);
-                }
-                // Close the file.
-                input.close();
-            } catch (FileNotFoundException ex) {
-                System.out.println("File not found. " + ex.toString());
-            }
-
-        }
-
-        private static void readMagicItemsFromFileToArray(String fileName,
-                                                          ListItem[] items) {
-            File myFile = new File(fileName);
-            try {
-                int itemCount = 0;
-                Scanner input = new Scanner(myFile);
-
-                while (input.hasNext() && itemCount < items.length) {
-                    // Read a line from the file.
-                    String itemName = input.nextLine();
-
-                    // Construct a new list item and set its attributes.
-                    ListItem fileItem = new ListItem();
-                    fileItem.setName(itemName);
-                    fileItem.setCost(Math.random() * 100);
-                    fileItem.setNext(null); // Still redundant. Still safe.
-
-                    // Add the newly constructed item to the array.
-                    items[itemCount] = fileItem;
-                    itemCount = itemCount + 1;
-                }
-                // Close the file.
-                input.close();
-            } catch (FileNotFoundException ex) {
-                System.out.println("File not found. " + ex.toString());
-            }
-        }
-
-        private static void selectionSort(ListItem[] items) {
-            for (int pass = 0; pass < items.length-1; pass++) {
-                // System.out.println(pass + "-" + items[pass]);
-                int indexOfTarget = pass;
-                int indexOfSmallest = indexOfTarget;
-                for (int j = indexOfTarget+1; j < items.length; j++) {
-                    if (items[j].getName().compareToIgnoreCase(items[indexOfSmallest].getName()) < 0) {
-                        indexOfSmallest = j;
-                    }
-                }
-                ListItem temp = items[indexOfTarget];
-                items[indexOfTarget] = items[indexOfSmallest];
-                items[indexOfSmallest] = temp;
-            }
-        }
-
-    }
 
 
     public static void main(String[] args) {
@@ -212,10 +58,8 @@ public class Game {
         // Set up the location instances of the Locale class.
         FirstFloor loc0 = new FirstFloor(0);
         loc0.setName("Living Room (Shop)");
-        loc0.setDesc("You are greeted by Colonel Mustard. He tells you there has been a murder in this house. He hands you a map and a camera. He shows more items you may consider taking. \n" +
-                "[Item: DNA Scanner. This device scans substances for DNA.] \n" +
-                "[Item: Deerstalker hat. This hat improves the detective stat by 10.] \n" +
-                "[Item: B.F. Sword. This sword grants +45 Attack Damage.] \n" +
+        loc0.setDesc("You are greeted by Colonel Mustard. He tells you there has been a murder in this house and some gold to buy items can be found in each room. He hands you a map and a camera. He shows more items you may consider taking. \n" +
+
                 "Just tell Colonel Mustard which item you want to take. \n" +
                 "You can go north, east or west from here");
         loc0.setNorth(4);
@@ -338,17 +182,7 @@ public class Game {
         item6.setName("A photo of the briefcase full of money");
         item6.setDesc("There was a briefcase full of money on the guest bed. You took a photo of it.");
 
-        Items item7 = new Items(7);
-        item7.setName("DNA Scanner");
-        item7.setDesc("This device scans substances for DNA.");
 
-        Items item8 = new Items(8);
-        item8.setName("Deerstalker hat");
-        item8.setDesc("This hat improves the criminal justice stat by 10");
-
-        Items item9 = new Items(9);
-        item9.setName("B.F. Sword");
-        item9.setDesc("This sword grants +45 Attack Damage.");
 
 
         //Item array
@@ -360,9 +194,7 @@ public class Game {
         interaction[4] = item4;
         interaction[5] = item5;
         interaction[6] = item6;
-        interaction[7] = item7;
-        interaction[8] = item8;
-        interaction[9] = item9;
+
 
         Items nottaken0 = new Items(0);
         nottaken0.setName("empty slot");
@@ -392,17 +224,7 @@ public class Game {
         nottaken6.setName("empty slot");
         nottaken6.setDesc("");
 
-        Items nottaken7 = new Items(7);
-        nottaken7.setName("empty slot");
-        nottaken7.setDesc("");
 
-        Items nottaken8 = new Items(8);
-        nottaken8.setName("empty slot");
-        nottaken8.setDesc("");
-
-        Items nottaken9 = new Items(9);
-        nottaken9.setName("empty slot");
-        nottaken9.setDesc("empty slot");
 
 
         taken = new Items[10];
@@ -413,9 +235,7 @@ public class Game {
         taken[4] = nottaken4;
         taken[5] = nottaken5;
         taken[6] = nottaken6;
-        taken[7] = nottaken7;
-        taken[8] = nottaken8;
-        taken[9] = nottaken9;
+
 
 
         if (DEBUGGING) {
@@ -434,13 +254,14 @@ public class Game {
     }
 
     private static void getCommand() {
-        System.out.print("[" + moves + " moves, score " + score + "] \n");
+        System.out.print("[" + moves + " moves, Score: " + score + ", Current Gold: " + money + "] \n");
         Scanner inputReader = new Scanner(System.in);
         command = inputReader.nextLine();  // command is global.
     }
 
     private static void navigate() {
-        int newLocation = 0;
+        final int INVALID = currentLocale;
+        int newLocation = INVALID;
 
         if (        command.equalsIgnoreCase("north") || command.equalsIgnoreCase("n") ) {
             newLocation = locations[currentLocale].getNorth();
@@ -460,27 +281,21 @@ public class Game {
             inv();
         }  else if ( command.equalsIgnoreCase("map")  || command.equalsIgnoreCase("m")) {
             map();
-        } else if ( command.equalsIgnoreCase("DNA Scanner")  && currentLocale == 0) {
-            takedna();
-        } else if ( command.equalsIgnoreCase("Deerstalker hat")  && currentLocale == 0) {
-            takehat();
-        } else if ( command.equalsIgnoreCase("B.F. Sword")  && currentLocale == 0) {
-            takesword();
         }
-
         ;
 
 
 
 
            if (newLocation == currentLocale) {
-                System.out.println("You cannot go that way.");
+                System.out.println("You did not move to a different location.");
             } else {
                 currentLocale = newLocation;
                 moves = moves + 1;
 
                 if (locations[newLocation].getHasVisited() == false && newLocation != 0){
                     score = score + 5;
+                    money = money + 10;
                     locations[newLocation].setHasVisited(true);
                 }
 
@@ -566,17 +381,6 @@ public class Game {
                 "\t\t\t\t\t    |\t\t\t   |\n" +
                 "\tKitchen\t   -   Living Room  -   Library");
     }
-    private static void takedna(){
-        taken[7] = interaction[7];
-        System.out.println("You took: " + interaction[7].getName());
-    }
-    private static void takehat(){
-        taken[8] = interaction[8];
-        System.out.println("You took: " + interaction[8].getName());
-    }
-    private static void takesword(){
-        taken[9] = interaction[9];
-        System.out.println("You took: " + interaction[9].getName());
-    }
+
 
 }
