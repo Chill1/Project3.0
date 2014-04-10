@@ -174,7 +174,7 @@ public class Game {
         item2.setDesc("You record Mrs. Peacock and Miss Scarlet claim that they saw a green man frantically leave the house.");
 
         Items item3 = new Items(3);
-        item3.setName("Picture of house owner.");
+        item3.setName("Picture of house owner");
         item3.setDesc("You take the picture that is a portrait of a middle aged man, the house owner.");
 
         Items item4 = new Items(4);
