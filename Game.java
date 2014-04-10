@@ -23,6 +23,10 @@ public class Game {
 
 
 
+
+
+
+
     public static void main(String[] args) {
         if (DEBUGGING) {
             // Display the command line args.
@@ -48,7 +52,6 @@ public class Game {
         // We're done. Thank the player and exit.
         System.out.println("Thank you for playing.");
     }
-
 
     private static void init() {
         // Initialize any uninitialized globals.
@@ -281,7 +284,10 @@ public class Game {
             inv();
         }  else if ( command.equalsIgnoreCase("map")  || command.equalsIgnoreCase("m")) {
             map();
+        }  else if ( command.equalsIgnoreCase("buy")  || command.equalsIgnoreCase("b")) {
+            buy();
         }
+
         ;
 
 
@@ -382,5 +388,94 @@ public class Game {
                 "\tKitchen\t   -   Living Room  -   Library");
     }
 
+    private static void buy() {
+        // Make the list manager.
+        ListMan lm1 = new ListMan();
+        lm1.setName("Magic Items");
+        lm1.setDesc("These are some of my favorite things.");
+
+
+        final String fileName = "magicitems.txt";
+        readMagicItemsFromFile(fileName, lm1);
+
+        // Display the list of items.
+        System.out.println(lm1.toString());
+
+        // Ask player for an item.
+        Scanner inputReader = new Scanner(System.in);
+        System.out.print("What item would you like? ");
+        String targetItem = new String();
+        targetItem = inputReader.nextLine();
+        System.out.println();
+
+        ListItem li = new ListItem();
+        li = sequentialSearch(lm1, targetItem);
+        if (li != null) {
+            System.out.println(li.toString());
+        }
+    }
+
+
+    //Private List Stuff
+    private static ListItem sequentialSearch(ListMan lm,
+                                             String target) {
+        ListItem retVal = null;
+        System.out.println("Searching for " + target + ".");
+        int counter = 0;
+        ListItem currentItem = new ListItem();
+        currentItem = lm.getHead();
+        boolean isFound = false;
+        while ( (!isFound) && (currentItem != null) ) {
+            counter = counter +1;
+            if (currentItem.getName().equalsIgnoreCase(target)) {
+                // We found it!
+                isFound = true;
+                retVal = currentItem;
+            } else {
+                // Keep looking.
+                currentItem = currentItem.getNext();
+            }
+        }
+        if (isFound) {
+            System.out.println("Found " + target + " after " + counter + " comparisons.");
+            return  currentItem;
+        } else {
+            System.out.println("Could not find " + target + " in " + counter + " comparisons.");
+        }
+
+        return retVal;
+    }
+
+
+    private static void readMagicItemsFromFile(String fileName,
+                                               ListMan lm) {
+        File myFile = new File(fileName);
+        try {
+            Scanner input = new Scanner(myFile);
+            while (input.hasNext()) {
+                // Read a line from the file.
+                String itemName = input.nextLine();
+
+                // Construct a new list item and set its attributes.
+                ListItem fileItem = new ListItem();
+                fileItem.setName(itemName);
+                fileItem.setCost(Math.random() * 100);
+                fileItem.setNext(null); // Still redundant. Still safe.
+
+                // Add the newly constructed item to the list.
+                lm.add(fileItem);
+            }
+            // Close the file.
+            input.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found. " + ex.toString());
+        }
+    }
+
+
 
 }
+
+
+
+
