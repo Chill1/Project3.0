@@ -19,7 +19,7 @@ public class Game {
     public static int[][]  nav;                     // An uninitialized array of type int int.
     public static int moves = 0;                    // Counter of the player's moves.
     public static int score = 0;                    // Tracker of the player's score.
-    public static int money = 0;                    // Keeps track of player's money.
+    public static double money = 0;                    // Keeps track of player's money.
 
 
 
@@ -61,10 +61,9 @@ public class Game {
         // Set up the location instances of the Locale class.
         FirstFloor loc0 = new FirstFloor(0);
         loc0.setName("Living Room (Shop)");
-        loc0.setDesc("You are greeted by Colonel Mustard. He tells you there has been a murder in this house and some gold to buy items can be found in each room. He hands you a map and a camera. He shows more items you may consider taking. \n" +
-
-                "Just tell Colonel Mustard which item you want to take. \n" +
-                "You can go north, east or west from here");
+        loc0.setDesc("You are greeted by Colonel Mustard. He tells you there has been a murder in this house and some gold to buy items can be found in each room. He hands you a map and a camera. \n" +
+                     "He can show you items you may consider buying. Type 'buy' or 'b' to see what items you can buy from Colonel Mustard. \n" +
+                     "You can go north, east or west from here");
         loc0.setNorth(4);
         loc0.setSouth(0);
         loc0.setEast(2);
@@ -294,7 +293,7 @@ public class Game {
 
 
            if (newLocation == currentLocale) {
-                System.out.println("You did not move to a different location.");
+                System.out.println("You did not move to a new location.");
             } else {
                 currentLocale = newLocation;
                 moves = moves + 1;
@@ -321,10 +320,9 @@ public class Game {
         System.out.println("   i/inventory");
         System.out.println("   m/map");
         System.out.println("   q/quit");
-        System.out.println("If you are in the living room, these commands work: ");
-        System.out.println("   DNA Scanner");
-        System.out.println("   Deerstalker Hat");
-        System.out.println("   B.F. Sword");
+        System.out.println("If you are in the living room, this command works: ");
+        System.out.println("   b/buy");
+
     }
 
     private static void quit() {
@@ -438,7 +436,16 @@ public class Game {
         }
         if (isFound) {
             System.out.println("Found " + target + " after " + counter + " comparisons.");
+            if (money >= currentItem.getCost()) {
+                System.out.println(target + " has been purchased and added to your inventory.");
+                money = money - currentItem.getCost();
+                //add to inventory
+            }
+            else if (money <= currentItem.getCost()){
+                System.out.println(target + " is too expensive, acquire more gold to purchase this item.");
+            }
             return  currentItem;
+
         } else {
             System.out.println("Could not find " + target + " in " + counter + " comparisons.");
         }
@@ -459,7 +466,7 @@ public class Game {
                 // Construct a new list item and set its attributes.
                 ListItem fileItem = new ListItem();
                 fileItem.setName(itemName);
-                fileItem.setCost(Math.random() * 100);
+                fileItem.setCost(Math.random() * 10);
                 fileItem.setNext(null); // Still redundant. Still safe.
 
                 // Add the newly constructed item to the list.
