@@ -55,7 +55,7 @@ public class ListMan {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[ListMan: name=" + this.name + " desc=" + this.desc + "] List Items:\n");
+        sb.append("[ListMan: " + this.name + ". " + this.desc + "] List Items:\n");
         ListItem currentItem = this.head;
         while (currentItem != null) {
             sb.append(currentItem.toString());

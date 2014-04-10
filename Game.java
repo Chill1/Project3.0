@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Game {
     //Charlie Hill
@@ -16,10 +17,13 @@ public class Game {
     public static Items[] interaction;
     public static Items[] taken;
     public static Locale[] locations;               // An uninitialized array of type Locale. See init() for initialization.
+    public static ArrayList<String> ShopInventory = new ArrayList<String>();
     public static int[][]  nav;                     // An uninitialized array of type int int.
     public static int moves = 0;                    // Counter of the player's moves.
     public static int score = 0;                    // Tracker of the player's score.
-    public static double money = 0;                    // Keeps track of player's money.
+    public static double money = 10;                    // Keeps track of player's money.
+
+
 
 
 
@@ -35,6 +39,7 @@ public class Game {
                 System.out.println(i + ":" + args[i]);
             }
         }
+
 
 
 
@@ -61,7 +66,7 @@ public class Game {
         // Set up the location instances of the Locale class.
         FirstFloor loc0 = new FirstFloor(0);
         loc0.setName("Living Room (Shop)");
-        loc0.setDesc("You are greeted by Colonel Mustard. He tells you there has been a murder in this house and some gold to buy items can be found in each room. He hands you a map and a camera. \n" +
+        loc0.setDesc("You are greeted by Colonel Mustard. He tells you there has been a murder in this house and you will be paid 10 gold for each room you explore. He hands you a map and a camera. \n" +
                      "He can show you items you may consider buying. Type 'buy' or 'b' to see what items you can buy from Colonel Mustard. \n" +
                      "You can go north, east or west from here");
         loc0.setNorth(4);
@@ -240,6 +245,8 @@ public class Game {
 
 
 
+
+
         if (DEBUGGING) {
             System.out.println("All game locations:");
             for (int i = 0; i < locations.length; ++i) {
@@ -283,7 +290,7 @@ public class Game {
             inv();
         }  else if ( command.equalsIgnoreCase("map")  || command.equalsIgnoreCase("m")) {
             map();
-        }  else if ( command.equalsIgnoreCase("buy")  || command.equalsIgnoreCase("b")) {
+        }  else if ( command.equalsIgnoreCase("buy")  || command.equalsIgnoreCase("b") && currentLocale == 0) {
             buy();
         }
 
@@ -374,7 +381,7 @@ public class Game {
     }
 
     private static void inv() {
-        System.out.println("Items: Map of House, Camera, " + taken[7] + ", " + taken[8] + ", " + taken[9]+ ", " + taken[0] + ", " + taken[1] + ", " + taken[2] + ", " + taken[3] + ", " + taken[4] + ", " + taken[5] + ", " + taken[6] );
+        System.out.println("Found Items: Map of House, Camera, " + taken[0] + ", " + taken[1] + ", " + taken[2] + ", " + taken[3] + ", " + taken[4] + ", " + taken[5] + ", " + taken[6] + "\nPurchased Items: " + ShopInventory);
     }
     private static void map() {
         System.out.println("\t\t\t\t   Master Bed\n" +
@@ -401,7 +408,7 @@ public class Game {
 
         // Ask player for an item.
         Scanner inputReader = new Scanner(System.in);
-        System.out.print("What item would you like? ");
+        System.out.print("What item would you like to buy? ");
         String targetItem = new String();
         targetItem = inputReader.nextLine();
         System.out.println();
@@ -417,6 +424,8 @@ public class Game {
     //Private List Stuff
     private static ListItem sequentialSearch(ListMan lm,
                                              String target) {
+
+
         ListItem retVal = null;
         System.out.println("Searching for " + target + ".");
         int counter = 0;
@@ -435,19 +444,20 @@ public class Game {
             }
         }
         if (isFound) {
-            System.out.println("Found " + target + " after " + counter + " comparisons.");
+            System.out.println("I found " + target + " after " + counter + " comparisons.");
             if (money >= currentItem.getCost()) {
-                System.out.println(target + " has been purchased and added to your inventory.");
+                System.out.println(currentItem.getName() + " has been purchased and added to your inventory.");
                 money = money - currentItem.getCost();
                 //add to inventory
+                ShopInventory.add(currentItem.getName());
             }
             else if (money <= currentItem.getCost()){
-                System.out.println(target + " is too expensive, acquire more gold to purchase this item.");
+                System.out.println(currentItem.getName() + " is too expensive, acquire more gold to purchase this item.");
             }
             return  currentItem;
 
         } else {
-            System.out.println("Could not find " + target + " in " + counter + " comparisons.");
+            System.out.println("Sorry I could not find " + target + " in " + counter + " comparisons. Feel free to re-enter the shop to try again.");
         }
 
         return retVal;
