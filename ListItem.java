@@ -1,4 +1,9 @@
 public class ListItem {
+    //Charlie Hill
+    //Professor Labouseur
+    //Software Development 1 - Project Three
+    //10 April 2014
+
 
     //
     // Public
